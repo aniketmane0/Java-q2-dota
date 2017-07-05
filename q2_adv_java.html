@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    DOTA
+  </head>
+
+  <body>
+   <div id="intro">
+     <label><b>Hero:</b></label>
+     <input type="text" name="hero" id="hero" value="" required="">
+          <label><b>Type:</b></label>
+     <select name="heroType" id="type" value="Please Select" required>
+         <option value="">Strength</option>
+         <option value="">Intelligence</option>
+         <option value="">Agility</option>
+
+     </select>
+     <label><b>Base Mana: </b></label>
+      <input type="text" name="baseMan" id="baseMana" value="" required="">
+
+<input type="submit" name="submit" id="create" value="Create Hero!">
+</div>
+<div id="checkBoxes"></div>
+
+
+  <div id="ability">
+    <h1>Ability</h1>
+    <form>
+      <label><b>Name</b></label>
+      <input type="text" name="ability" id="inputAbility" value="" required="">
+      <label><b>Mana Cost:</b></label>
+      <input type="number" name="CoolDown" id="inputManaCost" value="" required="">
+      <label><b>Cooldown:</b></label>
+      <input type="number" name="CoolDown" id="inputCoolDown" value="" required="">
+
+      <input type="submit" name="submit1" id="createAbility" value="Add Abililty!" required="">
+    </form>
+
+    <table id="abilityList">
+      <tr>
+        <th>Ability List</th>
+      </tr>
+    </table>
+</div>
+
+<script language="Javascript">
+
+rowNumber=0;
+abilityRowNumber=0;
+var abilities= new Array;
+
+var heroes= new Array;
+var detailsOfAbilities = new Array;
+
+
+
+    	var a = document.getElementById("createAbility")
+    	a.addEventListener("click", function(event){
+    		event.preventDefault()
+    	});
+
+/*  a.addEventListener("click", function(event){
+  event.preventDefault()
+}); */
+a.addEventListener("click",addAbility);
+
+
+    	var create = document.getElementById("create")
+    	create.addEventListener("click", function(event){
+    		event.preventDefault()
+    	});
+    	create.addEventListener("click", addHero)
+
+function ability(name,manaCost,coolDown){
+  this.name=name;
+  this.manaCost=manaCost;
+  this.coolDown=coolDown;
+}
+
+function hero(name,type,baseMana,heroAbilities){
+  this.name=name;
+  this.type=type;
+  this.baseMana=baseMana;
+  this.heroAbilities=heroAbilities;
+}
+
+function addHero(){
+  var heroAbilities= new Array;
+  var totalManaCost =0;
+  var coolDownCount =0;
+  var hero_name=document.getElementById("hero").value;
+  var hero_baseMana= document.getElementById("baseMana").value;
+  var q= document.getElementById("type");
+  var type= q.options[q.selectedIndex].text;
+  var maxManaPool= Number(hero_baseMana)+1000;
+  var ability_name;
+
+  var counter = 0;
+  var chk_arr =  document.getElementsByName("checkBoxes");
+  var chklength = chk_arr.length;
+  for(k=0;k< chklength;k++)
+     {
+       if(chk_arr[k].checked == true){
+         counter += 1;
+         ability_name = document.getElementById("abilityLabel"+k).htmlFor;
+         heroAbilities.push(ability_name);
+         totalManaCost +=Number(detailsOfAbilities[k].manaCost);
+         if(Number(detailsOfAbilities[k].coolDown)>0)
+          coolDownCount+=1;
+     }
+   }
+   if(totalManaCost > maxManaPool || coolDownCount < 2 || counter < 4)
+      alert("Please fill again");
+    else
+      {
+        heroes.push(new hero(hero_name, type, hero_baseMana, heroAbilities));
+        var t1 = document.createTextNode("  Hero Name: "+hero_name+"\n");
+            document.body.appendChild(t1);
+            var t2 = document.createTextNode("  Hero Type: "+type);
+            document.body.appendChild(t2);
+            var t3 = document.createTextNode("  Base Mana: "+hero_baseMana);
+            document.body.appendChild(t3);
+            var t4 = document.createTextNode("  Abilities: "+heroAbilities);
+            document.body.appendChild(t4);
+
+      }
+
+
+}
+
+function addAbility(){
+    var abilityName= document.getElementById("inputAbility").value;
+    var abilityMana= document.getElementById("inputManaCost").value;
+    var abilityCool= document.getElementById("inputCoolDown").value;
+    detailsOfAbilities.push(new ability(abilityName,abilityMana,abilityCool));
+    abilities.push(abilityName);
+
+    var table= document.getElementById("abilityList");
+    var row = table.insertRow(rowNumber+1);
+    row.id=rowNumber+1;
+
+    var cell= row.insertCell(0);
+    cell.innerHTML=abilityName;
+
+    var checkBox= document.createElement('input');
+    checkBox.type='checkbox';
+    checkBox.name="name";
+    checkBox.id="abilityButton"+abilityRowNumber;
+    checkBox.value="value";
+
+    var label= document.createElement('label');
+    label.htmlFor = abilityName;
+    label.id = "abilityLabel" + abilityRowNumber;
+    label.appendChild(document.createTextNode(abilityName));
+    checkBox.appendChild(label);
+
+    checkBoxes.appendChild(checkBox);
+    checkBoxes.appendChild(label);
+    rowNumber++;
+    abilityRowNumber++;
+ }
+
+
+</script>
+
+  </body>
+</html>
